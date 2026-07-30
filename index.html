@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#1a1a2e">
+<meta name="theme-color" id="themeColor" content="#0f0f1a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Chore Tracker</title>
@@ -13,17 +13,35 @@
     --bg: #0f0f1a;
     --surface: #1a1a2e;
     --surface2: #252540;
+    --surface3: #303050;
     --accent: #6c63ff;
-    --accent-glow: rgba(108, 99, 255, 0.3);
+    --accent-glow: rgba(108, 99, 255, 0.25);
     --text: #e8e8f0;
     --text2: #9898b0;
+    --text3: #6a6a80;
     --green: #2ecc71;
-    --green-bg: rgba(46, 204, 113, 0.15);
+    --green-bg: rgba(46, 204, 113, 0.12);
     --red: #e74c3c;
-    --red-bg: rgba(231, 76, 60, 0.15);
+    --orange: #f39c12;
+    --orange-bg: rgba(243, 156, 18, 0.12);
     --radius: 16px;
     --radius-sm: 10px;
+    --radius-xs: 6px;
     --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .light {
+    --bg: #f0f0f5;
+    --surface: #ffffff;
+    --surface2: #e4e4ec;
+    --surface3: #d4d4e0;
+    --text: #1a1a2e;
+    --text2: #6a6a80;
+    --text3: #9a9ab0;
+    --accent-glow: rgba(108, 99, 255, 0.12);
+    --green-bg: rgba(46, 204, 113, 0.1);
+    --orange-bg: rgba(243, 156, 18, 0.1);
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body {
@@ -34,57 +52,76 @@
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior: none;
   }
-  body { padding: 16px 16px 100px; }
+  body { padding: 12px 16px 100px; }
 
   .header {
-    text-align: center;
-    padding: 24px 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0 8px;
   }
-  .header h1 {
-    font-size: 28px;
+  .header-left h1 {
+    font-size: 26px;
     font-weight: 700;
     letter-spacing: -0.5px;
     background: linear-gradient(135deg, var(--accent), #a78bfa);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  .header p {
+  .header-left p {
     color: var(--text2);
-    font-size: 14px;
-    margin-top: 4px;
+    font-size: 13px;
+    margin-top: 1px;
   }
+  .header-actions {
+    display: flex;
+    gap: 6px;
+  }
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: var(--surface);
+    color: var(--text2);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .icon-btn:active { transform: scale(0.9); background: var(--surface2); }
 
   .stats-row {
     display: flex;
-    gap: 10px;
-    margin: 16px 0;
+    gap: 8px;
+    margin: 12px 0;
   }
   .stat-card {
     flex: 1;
     background: var(--surface);
     border-radius: var(--radius-sm);
-    padding: 14px 12px;
+    padding: 12px 8px;
     text-align: center;
     border: 1px solid rgba(255,255,255,0.04);
   }
-  .stat-card .num {
-    font-size: 24px;
-    font-weight: 700;
-  }
+  .stat-card .num { font-size: 22px; font-weight: 700; }
   .stat-card .label {
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text2);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-top: 2px;
   }
-  .stat-card.completed .num { color: var(--green); }
+  .stat-card.daily .num { color: var(--green); }
+  .stat-card.weekly .num { color: var(--orange); }
   .stat-card.streak .num { color: var(--accent); }
 
   .add-form {
     display: flex;
     gap: 8px;
-    margin: 16px 0;
+    margin: 12px 0;
   }
   .add-form input {
     flex: 1;
@@ -97,11 +134,30 @@
     outline: none;
     transition: border 0.2s;
   }
-  .add-form input:focus {
-    border-color: var(--accent);
-  }
+  .add-form input:focus { border-color: var(--accent); }
   .add-form input::placeholder { color: var(--text2); }
-  .add-form button {
+  .add-form .add-type {
+    display: flex;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .add-form .add-type button {
+    padding: 14px 12px;
+    border: none;
+    background: var(--surface);
+    color: var(--text3);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .add-form .add-type button.active {
+    background: var(--accent);
+    color: #fff;
+  }
+  .add-form .add-btn {
     background: var(--accent);
     color: #fff;
     border: none;
@@ -113,49 +169,133 @@
     transition: all 0.2s;
     flex-shrink: 0;
   }
-  .add-form button:active { transform: scale(0.95); }
+  .add-form .add-btn:active { transform: scale(0.95); }
+
+  .group-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 4px 8px;
+    margin-top: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .group-header .arrow {
+    font-size: 12px;
+    color: var(--text3);
+    transition: transform 0.2s;
+    width: 16px;
+  }
+  .group-header .arrow.collapsed { transform: rotate(-90deg); }
+  .group-header .gname {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    flex: 1;
+  }
+  .group-header .gcount {
+    font-size: 12px;
+    color: var(--text3);
+    background: var(--surface2);
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .group-header .g-actions {
+    display: flex;
+    gap: 2px;
+  }
+  .group-header .g-actions button {
+    background: none;
+    border: none;
+    color: var(--text3);
+    padding: 4px 6px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+  .group-header .g-actions button:active { background: var(--surface2); color: var(--text); }
 
   .chore-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
 
   .chore-card {
     background: var(--surface);
     border-radius: var(--radius);
-    padding: 16px;
+    padding: 14px 16px;
     border: 1px solid rgba(255,255,255,0.04);
     transition: all 0.3s;
-    animation: slideIn 0.3s ease;
+    animation: slideIn 0.25s ease;
   }
   @keyframes slideIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .chore-card.done {
+  .chore-card.daily.done {
     border-color: var(--green);
     background: var(--green-bg);
+  }
+  .chore-card.weekly.done {
+    border-color: var(--orange);
+    background: var(--orange-bg);
   }
 
   .chore-top {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+  }
+  .chore-info {
+    flex: 1;
+    min-width: 0;
   }
   .chore-name {
-    flex: 1;
     font-size: 16px;
     font-weight: 500;
+    word-break: break-word;
   }
-  .chore-card.done .chore-name {
+  .chore-card.daily.done .chore-name {
     text-decoration: line-through;
     opacity: 0.6;
   }
+  .chore-card.weekly.done .chore-name {
+    opacity: 0.6;
+  }
+  .chore-type-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .chore-type-badge.daily {
+    background: var(--green-bg);
+    color: var(--green);
+  }
+  .chore-type-badge.weekly {
+    background: var(--orange-bg);
+    color: var(--orange);
+  }
+  .chore-notes-preview {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   .check-btn {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     border: 2px solid var(--text2);
     background: transparent;
@@ -166,135 +306,382 @@
     transition: all 0.2s;
     flex-shrink: 0;
     color: transparent;
-    font-size: 16px;
+    font-size: 14px;
   }
   .check-btn:active { transform: scale(0.9); }
-  .check-btn.checked {
+  .chore-card.daily .check-btn.checked {
     background: var(--green);
     border-color: var(--green);
     color: #fff;
   }
+  .chore-card.weekly .check-btn.checked {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: #fff;
+  }
 
-  .delete-btn {
-    background: none;
-    border: none;
-    color: var(--text2);
-    font-size: 20px;
-    cursor: pointer;
-    padding: 4px 8px;
-    line-height: 1;
-    transition: color 0.2s;
+  .chore-actions {
+    display: flex;
+    gap: 2px;
     flex-shrink: 0;
   }
-  .delete-btn:active { color: var(--red); }
+  .chore-actions button {
+    background: none;
+    border: none;
+    color: var(--text3);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .chore-actions button:active { background: var(--surface2); color: var(--text); }
+  .chore-actions .del-btn:active { color: var(--red); }
 
   .chore-meta {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-top: 10px;
-    padding-top: 10px;
+    gap: 10px;
+    margin-top: 8px;
+    padding-top: 8px;
     border-top: 1px solid rgba(255,255,255,0.05);
   }
   .streak-badge {
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: 13px;
+    gap: 3px;
+    font-size: 12px;
     color: var(--accent);
     font-weight: 600;
   }
-  .streak-badge .fire {
-    font-size: 15px;
-  }
+  .streak-badge .fire { font-size: 14px; }
   .week-grid {
     display: flex;
-    gap: 4px;
+    gap: 3px;
     margin-left: auto;
   }
   .day-dot {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: var(--surface2);
     transition: all 0.3s;
     flex-shrink: 0;
   }
-  .day-dot.done { background: var(--green); }
+  .daily .day-dot.done { background: var(--green); }
+  .weekly .day-dot.done { background: var(--orange); }
   .day-dot.today { border: 2px solid var(--accent); }
-  .day-dot.missed { background: var(--red); }
 
   .empty-state {
     text-align: center;
-    padding: 40px 20px;
+    padding: 32px 20px;
     color: var(--text2);
   }
-  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state .icon { font-size: 42px; margin-bottom: 10px; }
   .empty-state p { font-size: 14px; line-height: 1.5; }
 
-  .section-title {
-    font-size: 14px;
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 100;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet {
+    background: var(--surface);
+    width: 100%;
+    max-width: 500px;
+    max-height: 85vh;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 24px 32px;
+    animation: slideUp 0.3s ease;
+    overflow-y: auto;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .modal-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--surface3);
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+  .modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .modal-field {
+    margin-bottom: 14px;
+  }
+  .modal-field label {
+    display: block;
+    font-size: 12px;
     font-weight: 600;
     color: var(--text2);
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin: 20px 0 10px;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .modal-field input,
+  .modal-field textarea,
+  .modal-field select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-xs);
+    padding: 10px 12px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: var(--font);
+    outline: none;
+    transition: border 0.2s;
+  }
+  .modal-field input:focus,
+  .modal-field textarea:focus,
+  .modal-field select:focus { border-color: var(--accent); }
+  .modal-field textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+  .modal-field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239898b0' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  .modal-field .radio-group {
+    display: flex;
+    gap: 8px;
+  }
+  .modal-field .radio-group button {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-xs);
+    background: var(--surface2);
+    color: var(--text2);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .modal-field .radio-group button.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .modal-actions button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .modal-actions button:active { transform: scale(0.97); }
+  .modal-actions .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .modal-actions .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+  }
+  .modal-actions .btn-danger {
+    background: var(--red);
+    color: #fff;
   }
 
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #f5f5fa;
-      --surface: #ffffff;
-      --surface2: #e8e8f0;
-      --text: #1a1a2e;
-      --text2: #8888a0;
-      --accent-glow: rgba(108, 99, 255, 0.15);
-    }
+  .group-list-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .group-list-item:last-child { border-bottom: none; }
+  .group-list-item .gname { flex: 1; font-size: 15px; font-weight: 500; }
+  .group-list-item .gcount { font-size: 12px; color: var(--text3); }
+  .group-list-item button {
+    background: none;
+    border: none;
+    color: var(--text3);
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 4px;
+  }
+  .group-list-item button:active { background: var(--surface2); }
+  .group-list-item .del-btn:active { color: var(--red); }
+
+  .add-group-form {
+    display: flex;
+    gap: 6px;
+    margin: 12px 0;
+  }
+  .add-group-form input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-xs);
+    padding: 10px 12px;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+  }
+  .add-group-form input:focus { border-color: var(--accent); }
+  .add-group-form button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-xs);
+    padding: 0 14px;
+    font-size: 20px;
+    cursor: pointer;
   }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>Chore Tracker</h1>
-  <p id="dateDisplay"></p>
+  <div class="header-left">
+    <h1>Chore Tracker</h1>
+    <p id="dateDisplay"></p>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" id="groupsBtn" title="Manage Groups">🏷️</button>
+    <button class="icon-btn" id="themeBtn" title="Toggle Theme">🌙</button>
+  </div>
 </div>
 
 <div class="stats-row">
-  <div class="stat-card completed">
-    <div class="num" id="todayCount">0/0</div>
-    <div class="label">Today</div>
+  <div class="stat-card daily">
+    <div class="num" id="dailyCount">0/0</div>
+    <div class="label">Daily Today</div>
+  </div>
+  <div class="stat-card weekly">
+    <div class="num" id="weeklyCount">0/0</div>
+    <div class="label">Weekly This Week</div>
   </div>
   <div class="stat-card streak">
-    <div class="num" id="totalStreak">0</div>
+    <div class="num" id="bestStreak">0</div>
     <div class="label">Best Streak</div>
-  </div>
-  <div class="stat-card">
-    <div class="num" id="totalCompleted">0</div>
-    <div class="label">Total Done</div>
   </div>
 </div>
 
 <div class="add-form">
   <input type="text" id="choreInput" placeholder="Add a chore..." autocomplete="off">
-  <button id="addBtn">+</button>
+  <div class="add-type">
+    <button id="addTypeDaily" class="active" data-type="daily">D</button>
+    <button id="addTypeWeekly" data-type="weekly">W</button>
+  </div>
+  <button class="add-btn" id="addBtn">+</button>
 </div>
 
-<div class="section-title">Today's Chores</div>
-<div class="chore-list" id="choreList"></div>
+<div id="choreContainer"></div>
+
+<!-- Edit Chore Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Edit Chore</div>
+    <div class="modal-field">
+      <label>Name</label>
+      <input type="text" id="editName">
+    </div>
+    <div class="modal-field">
+      <label>Group</label>
+      <select id="editGroup"><option value="">None</option></select>
+    </div>
+    <div class="modal-field">
+      <label>Type</label>
+      <div class="radio-group">
+        <button id="editTypeDaily" data-type="daily">Daily</button>
+        <button id="editTypeWeekly" data-type="weekly">Weekly</button>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>Notes</label>
+      <textarea id="editNotes" placeholder="Optional notes..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="editCancel">Cancel</button>
+      <button class="btn-primary" id="editSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Groups Modal -->
+<div class="modal-overlay" id="groupsModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Manage Groups</div>
+    <div class="add-group-form">
+      <input type="text" id="groupInput" placeholder="New group name...">
+      <button id="addGroupBtn">+</button>
+    </div>
+    <div id="groupList"></div>
+    <div class="modal-actions" style="margin-top:12px">
+      <button class="btn-secondary" id="groupsDone">Done</button>
+    </div>
+  </div>
+</div>
 
 <script>
   const STORAGE_KEY = 'chore_tracker_data';
+  const THEME_KEY = 'chore_tracker_theme';
   const WEEKDAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
   let state = loadState();
+  let editChoreId = null;
 
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          return migrateData(parsed);
+        }
+      }
     } catch {}
-    return { chores: [] };
+    return { version: 2, chores: [], groups: [] };
+  }
+
+  function migrateData(data) {
+    if (data.version === 2) return data;
+
+    if (!data.version || data.version < 2) {
+      data.groups = data.groups || [];
+      data.chores = (data.chores || []).map(c => ({
+        ...c,
+        groupId: c.groupId || null,
+        notes: c.notes || '',
+        type: c.type || 'daily'
+      }));
+      data.version = 2;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+    return data;
   }
 
   function saveState() {
@@ -305,63 +692,113 @@
     return new Date().toISOString().slice(0, 10);
   }
 
-  function formatDate(dateStr) {
-    const d = new Date(dateStr + 'T12:00:00');
-    return WEEKDAYS[d.getDay()] + ' ' + d.getDate() + '/' + (d.getMonth()+1);
+  function getWeekKey(date) {
+    const d = new Date(date);
+    d.setHours(0,0,0,0);
+    d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+    const year = d.getFullYear();
+    const week = Math.floor((d - new Date(year, 0, 4)) / 86400000 / 7) + 1;
+    return year + '-W' + String(week).padStart(2, '0');
   }
 
-  function getLast7Days() {
-    const days = [];
-    for (let i = 6; i >= 0; i--) {
+  function currentWeek() {
+    return getWeekKey(new Date());
+  }
+
+  function getLastN(n, type) {
+    const result = [];
+    if (type === 'weekly') {
       const d = new Date();
-      d.setDate(d.getDate() - i);
-      days.push(d.toISOString().slice(0, 10));
+      d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+      d.setDate(d.getDate() - (n - 1) * 7);
+      for (let i = 0; i < n; i++) {
+        result.push(getWeekKey(d));
+        d.setDate(d.getDate() + 7);
+      }
+    } else {
+      for (let i = n - 1; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        result.push(d.toISOString().slice(0, 10));
+      }
     }
-    return days;
+    return result;
   }
 
-  function computeStreak(history) {
+  function computeStreak(history, type) {
     let streak = 0;
-    const d = new Date();
-    while (true) {
-      const key = d.toISOString().slice(0, 10);
-      if (history[key]) {
-        streak++;
-        d.setDate(d.getDate() - 1);
-      } else {
-        break;
+    if (type === 'weekly') {
+      const d = new Date();
+      while (true) {
+        const key = getWeekKey(d);
+        if (history[key]) { streak++; d.setDate(d.getDate() - 7); }
+        else break;
+      }
+    } else {
+      const d = new Date();
+      while (true) {
+        const key = d.toISOString().slice(0, 10);
+        if (history[key]) { streak++; d.setDate(d.getDate() - 1); }
+        else break;
       }
     }
     return streak;
   }
 
-  function computeBestStreak(history) {
-    const sorted = Object.keys(history).filter(k => history[k]).sort();
-    if (!sorted.length) return 0;
+  function computeBestStreak(history, type) {
+    const keys = Object.keys(history).filter(k => history[k]);
+    if (!keys.length) return 0;
+    keys.sort();
     let best = 1, cur = 1;
-    for (let i = 1; i < sorted.length; i++) {
-      const prev = new Date(sorted[i-1] + 'T12:00:00');
-      const curr = new Date(sorted[i] + 'T12:00:00');
-      const diff = (curr - prev) / (1000 * 60 * 60 * 24);
-      if (diff === 1) {
-        cur++;
-        best = Math.max(best, cur);
+    const step = type === 'weekly' ? 7 : 1;
+    for (let i = 1; i < keys.length; i++) {
+      const prev = type === 'weekly'
+        ? getWeekKey(new Date(keys[i-1]))
+        : keys[i-1];
+      const curr = type === 'weekly'
+        ? getWeekKey(new Date(keys[i]))
+        : keys[i];
+      if (type === 'weekly') {
+        const pNum = parseInt(prev.split('-W')[1]);
+        const cNum = parseInt(curr.split('-W')[1]);
+        const pYear = parseInt(prev.split('-W')[0]);
+        const cYear = parseInt(curr.split('-W')[0]);
+        const diff = (cYear * 52 + cNum) - (pYear * 52 + pNum);
+        if (diff === 1) { cur++; best = Math.max(best, cur); }
+        else cur = 1;
       } else {
-        cur = 1;
+        const prevD = new Date(prev + 'T12:00:00');
+        const currD = new Date(curr + 'T12:00:00');
+        const diff = (currD - prevD) / 86400000;
+        if (diff === 1) { cur++; best = Math.max(best, cur); }
+        else cur = 1;
       }
     }
     return Math.max(best, cur);
   }
 
+  function addChore(name, type) {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    const chore = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      name: trimmed,
+      groupId: null,
+      notes: '',
+      type: type || 'daily',
+      history: {}
+    };
+    state.chores.push(chore);
+    saveState();
+    render();
+  }
+
   function toggleChore(id) {
     const chore = state.chores.find(c => c.id === id);
     if (!chore) return;
-    const t = today();
-    if (chore.history[t]) {
-      delete chore.history[t];
-    } else {
-      chore.history[t] = true;
-    }
+    const key = chore.type === 'weekly' ? currentWeek() : today();
+    if (chore.history[key]) delete chore.history[key];
+    else chore.history[key] = true;
     saveState();
     render();
   }
@@ -372,86 +809,275 @@
     render();
   }
 
-  function addChore(name) {
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    const chore = {
-      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-      name: trimmed,
-      createdAt: today(),
-      history: {}
-    };
-    state.chores.push(chore);
+  function updateChore(id, data) {
+    const chore = state.chores.find(c => c.id === id);
+    if (!chore) return;
+    Object.assign(chore, data);
     saveState();
     render();
   }
 
-  let isSubmitting = false;
+  function addGroup(name) {
+    const trimmed = name.trim();
+    if (!trimmed || state.groups.find(g => g.name.toLowerCase() === trimmed.toLowerCase())) return;
+    state.groups.push({ id: Date.now().toString(36), name: trimmed });
+    saveState();
+    renderGroupModal();
+    render();
+  }
+
+  function renameGroup(id, name) {
+    const g = state.groups.find(g => g.id === id);
+    if (!g) return;
+    g.name = name.trim() || g.name;
+    saveState();
+    renderGroupModal();
+    render();
+  }
+
+  function deleteGroup(id) {
+    state.chores.forEach(c => { if (c.groupId === id) c.groupId = null; });
+    state.groups = state.groups.filter(g => g.id !== id);
+    saveState();
+    renderGroupModal();
+    render();
+  }
+
+  function loadTheme() {
+    try { return localStorage.getItem(THEME_KEY) || 'auto'; }
+    catch { return 'auto'; }
+  }
+
+  function saveTheme(t) {
+    localStorage.setItem(THEME_KEY, t);
+  }
+
+  function applyTheme(theme) {
+    const isLight = theme === 'light' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: light)').matches);
+    document.body.classList.toggle('light', isLight);
+    document.getElementById('themeColor').content = isLight ? '#f0f0f5' : '#0f0f1a';
+    document.getElementById('themeBtn').textContent = isLight ? '☀️' : '🌙';
+  }
+
+  let currentTheme = loadTheme();
+  applyTheme(currentTheme);
 
   function render() {
+    const container = document.getElementById('choreContainer');
     const t = today();
-    const list = document.getElementById('choreList');
-    const todayCount = document.getElementById('todayCount');
-    const totalStreak = document.getElementById('totalStreak');
-    const totalCompleted = document.getElementById('totalCompleted');
+    const wk = currentWeek();
 
-    const last7 = getLast7Days();
+    const dailyChores = state.chores.filter(c => c.type === 'daily');
+    const weeklyChores = state.chores.filter(c => c.type === 'weekly');
+    const allChores = state.chores;
 
-    let doneToday = 0;
-    let allTimeDone = 0;
+    let dailyDone = dailyChores.filter(c => c.history[t]).length;
+    let weeklyDone = weeklyChores.filter(c => c.history[wk]).length;
     let bestStreakOverall = 0;
-    state.chores.forEach(c => {
-      if (c.history[t]) doneToday++;
-      allTimeDone += Object.values(c.history).filter(Boolean).length;
-      bestStreakOverall = Math.max(bestStreakOverall, computeBestStreak(c.history));
+    allChores.forEach(c => {
+      bestStreakOverall = Math.max(bestStreakOverall, computeBestStreak(c.history, c.type));
     });
 
-    todayCount.textContent = doneToday + '/' + state.chores.length;
-    totalStreak.textContent = bestStreakOverall;
-    totalCompleted.textContent = allTimeDone;
+    document.getElementById('dailyCount').textContent = dailyDone + '/' + dailyChores.length;
+    document.getElementById('weeklyCount').textContent = weeklyDone + '/' + weeklyChores.length;
+    document.getElementById('bestStreak').textContent = bestStreakOverall;
 
-    if (state.chores.length === 0) {
-      list.innerHTML = `
+    if (!allChores.length) {
+      container.innerHTML = `
         <div class="empty-state">
           <div class="icon">🧹</div>
-          <p>No chores yet. Add one above!<br>Try "Take out trash" or "Do dishes"</p>
+          <p>No chores yet. Add one above!</p>
         </div>`;
       return;
     }
 
-    list.innerHTML = state.chores.map(chore => {
-      const done = !!chore.history[t];
-      const streak = computeStreak(chore.history);
-      const weekStatus = last7.map(d => {
-        if (chore.history[d]) return 'done';
-        if (d === t) return 'today';
-        return '';
-      });
+    const grouped = {};
+    state.groups.forEach(g => { grouped[g.id] = { name: g.name, chores: [] }; });
+    grouped['__none__'] = { name: '', chores: [] };
 
-      return `
-        <div class="chore-card ${done ? 'done' : ''}">
-          <div class="chore-top">
-            <button class="check-btn ${done ? 'checked' : ''}" data-id="${chore.id}">✓</button>
-            <span class="chore-name">${escapeHtml(chore.name)}</span>
-            <button class="delete-btn" data-id="${chore.id}">✕</button>
-          </div>
-          <div class="chore-meta">
-            <div class="streak-badge">
-              <span class="fire">${streak >= 3 ? '🔥' : '⚡'}</span>
-              ${streak} day${streak !== 1 ? 's' : ''}
-            </div>
-            <div class="week-grid">
-              ${weekStatus.map(s => `<div class="day-dot ${s}"></div>`).join('')}
-            </div>
-          </div>
+    allChores.forEach(c => {
+      const key = c.groupId && grouped[c.groupId] ? c.groupId : '__none__';
+      grouped[key].chores.push(c);
+    });
+
+    const collapsed = getCollapsedGroups();
+    let html = '';
+    const groupIds = state.groups.map(g => g.id);
+    if (grouped['__none__'] && grouped['__none__'].chores.length) groupIds.push('__none__');
+
+    groupIds.forEach(gid => {
+      const g = grouped[gid];
+      if (!g || !g.chores.length) return;
+      const isCollapsed = collapsed.has(gid);
+      const label = gid === '__none__' ? 'Other' : g.name;
+
+      html += `
+        <div class="group-header" data-group-id="${gid}">
+          <span class="arrow ${isCollapsed ? 'collapsed' : ''}">▼</span>
+          <span class="gname">${escapeHtml(label)}</span>
+          <span class="gcount">${g.chores.length}</span>
+          ${gid !== '__none__' ? `
+          <div class="g-actions">
+            <button class="rename-group-btn" data-id="${gid}" title="Rename">✏️</button>
+            <button class="del-group-btn" data-id="${gid}" title="Delete">✕</button>
+          </div>` : ''}
+        </div>
+        <div class="chore-list" data-group-id="${gid}" style="${isCollapsed ? 'display:none' : ''}">
+          ${g.chores.map(chore => {
+            const done = chore.type === 'weekly' ? !!chore.history[wk] : !!chore.history[t];
+            const streak = computeStreak(chore.history, chore.type);
+            const streakLabel = chore.type === 'weekly' ? 'week' : 'day';
+            const lastN = getLastN(chore.type === 'weekly' ? 6 : 7, chore.type);
+            const weekStatus = lastN.map(d => {
+              if (chore.history[d]) return 'done';
+              const isToday = chore.type === 'weekly' ? d === wk : d === t;
+              return isToday ? 'today' : '';
+            });
+
+            return `
+              <div class="chore-card ${chore.type} ${done ? 'done' : ''}">
+                <div class="chore-top">
+                  <button class="check-btn ${done ? 'checked' : ''}" data-id="${chore.id}">✓</button>
+                  <div class="chore-info">
+                    <span class="chore-name">${escapeHtml(chore.name)}</span>
+                    <span class="chore-type-badge ${chore.type}">${chore.type === 'weekly' ? 'Weekly' : 'Daily'}</span>
+                    ${chore.notes ? `<div class="chore-notes-preview">📝 ${escapeHtml(chore.notes.slice(0, 50))}${chore.notes.length > 50 ? '...' : ''}</div>` : ''}
+                  </div>
+                  <div class="chore-actions">
+                    <button class="edit-btn" data-id="${chore.id}" title="Edit">✏️</button>
+                    <button class="del-btn" data-id="${chore.id}" title="Delete">✕</button>
+                  </div>
+                </div>
+                <div class="chore-meta">
+                  <div class="streak-badge">
+                    <span class="fire">${streak >= 3 ? '🔥' : '⚡'}</span>
+                    ${streak} ${streakLabel}${streak !== 1 ? 's' : ''}
+                  </div>
+                  <div class="week-grid">
+                    ${weekStatus.map(s => `<div class="day-dot ${s}"></div>`).join('')}
+                  </div>
+                </div>
+              </div>`;
+          }).join('')}
         </div>`;
-    }).join('');
+    });
+
+    container.innerHTML = html;
 
     document.querySelectorAll('.check-btn').forEach(btn => {
       btn.addEventListener('click', () => toggleChore(btn.dataset.id));
     });
-    document.querySelectorAll('.delete-btn').forEach(btn => {
+    document.querySelectorAll('.del-btn').forEach(btn => {
       btn.addEventListener('click', () => deleteChore(btn.dataset.id));
+    });
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', () => openEditModal(btn.dataset.id));
+    });
+    document.querySelectorAll('.group-header').forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target.closest('.g-actions')) return;
+        const gid = el.dataset.groupId;
+        toggleGroupCollapse(gid);
+      });
+    });
+    document.querySelectorAll('.del-group-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const gid = btn.dataset.id;
+        if (confirm('Delete this group? Chores will become ungrouped.')) deleteGroup(gid);
+      });
+    });
+    document.querySelectorAll('.rename-group-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const gid = btn.dataset.id;
+        const g = state.groups.find(gg => gg.id === gid);
+        if (!g) return;
+        const name = prompt('Rename group:', g.name);
+        if (name && name.trim()) renameGroup(gid, name.trim());
+      });
+    });
+  }
+
+  function getCollapsedGroups() {
+    try {
+      const raw = localStorage.getItem('chore_collapsed_groups');
+      return new Set(raw ? JSON.parse(raw) : []);
+    } catch { return new Set(); }
+  }
+
+  function saveCollapsedGroups(set) {
+    localStorage.setItem('chore_collapsed_groups', JSON.stringify([...set]));
+  }
+
+  function toggleGroupCollapse(gid) {
+    const set = getCollapsedGroups();
+    if (set.has(gid)) set.delete(gid);
+    else set.add(gid);
+    saveCollapsedGroups(set);
+    render();
+  }
+
+  function openEditModal(id) {
+    const chore = state.chores.find(c => c.id === id);
+    if (!chore) return;
+    editChoreId = id;
+    document.getElementById('editName').value = chore.name;
+    document.getElementById('editNotes').value = chore.notes || '';
+    document.getElementById('editGroup').innerHTML =
+      '<option value="">None</option>' +
+      state.groups.map(g => `<option value="${g.id}" ${chore.groupId === g.id ? 'selected' : ''}>${escapeHtml(g.name)}</option>`).join('');
+    const typeDaily = document.getElementById('editTypeDaily');
+    const typeWeekly = document.getElementById('editTypeWeekly');
+    typeDaily.classList.toggle('active', chore.type === 'daily');
+    typeWeekly.classList.toggle('active', chore.type === 'weekly');
+    document.getElementById('editModal').classList.add('open');
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').classList.remove('open');
+    editChoreId = null;
+  }
+
+  function saveEditModal() {
+    if (!editChoreId) return;
+    const name = document.getElementById('editName').value.trim();
+    if (!name) return;
+    const type = document.getElementById('editTypeDaily').classList.contains('active') ? 'daily' : 'weekly';
+    updateChore(editChoreId, {
+      name,
+      notes: document.getElementById('editNotes').value.trim(),
+      groupId: document.getElementById('editGroup').value || null,
+      type
+    });
+    closeEditModal();
+  }
+
+  function renderGroupModal() {
+    const list = document.getElementById('groupList');
+    if (!state.groups.length) {
+      list.innerHTML = '<p style="color:var(--text3);font-size:14px;text-align:center;padding:12px 0">No groups yet.</p>';
+      return;
+    }
+    list.innerHTML = state.groups.map(g => `
+      <div class="group-list-item">
+        <span class="gname">${escapeHtml(g.name)}</span>
+        <span class="gcount">${state.chores.filter(c => c.groupId === g.id).length} chores</span>
+        <button class="rename-g-btn" data-id="${g.id}">✏️</button>
+        <button class="del-g-btn" data-id="${g.id}">✕</button>
+      </div>`).join('');
+    document.querySelectorAll('.rename-g-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const g = state.groups.find(gg => gg.id === btn.dataset.id);
+        if (!g) return;
+        const name = prompt('Rename group:', g.name);
+        if (name && name.trim()) renameGroup(btn.dataset.id, name.trim());
+      });
+    });
+    document.querySelectorAll('.del-g-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (confirm('Delete this group? Chores will become ungrouped.')) deleteGroup(btn.dataset.id);
+      });
     });
   }
 
@@ -461,20 +1087,75 @@
     return d.innerHTML;
   }
 
-  document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-US', {
+  function getElement(id) { return document.getElementById(id); }
+
+  getElement('dateDisplay').textContent = new Date().toLocaleDateString('en-US', {
     weekday: 'long', month: 'long', day: 'numeric'
   });
 
-  document.getElementById('addBtn').addEventListener('click', () => {
-    const input = document.getElementById('choreInput');
-    addChore(input.value);
+  const addType = 'daily';
+  getElement('addTypeDaily').addEventListener('click', () => {
+    getElement('addTypeDaily').classList.add('active');
+    getElement('addTypeWeekly').classList.remove('active');
+  });
+  getElement('addTypeWeekly').addEventListener('click', () => {
+    getElement('addTypeWeekly').classList.add('active');
+    getElement('addTypeDaily').classList.remove('active');
+  });
+
+  getElement('addBtn').addEventListener('click', () => {
+    const input = getElement('choreInput');
+    const type = getElement('addTypeDaily').classList.contains('active') ? 'daily' : 'weekly';
+    addChore(input.value, type);
     input.value = '';
     input.focus();
   });
-  document.getElementById('choreInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      document.getElementById('addBtn').click();
-    }
+  getElement('choreInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') getElement('addBtn').click();
+  });
+
+  getElement('themeBtn').addEventListener('click', () => {
+    const order = { auto: 'dark', dark: 'light', light: 'auto' };
+    currentTheme = order[currentTheme] || 'auto';
+    saveTheme(currentTheme);
+    applyTheme(currentTheme);
+  });
+  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+    applyTheme(currentTheme);
+  });
+
+  getElement('editCancel').addEventListener('click', closeEditModal);
+  getElement('editSave').addEventListener('click', saveEditModal);
+  getElement('editModal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeEditModal();
+  });
+  getElement('editTypeDaily').addEventListener('click', () => {
+    getElement('editTypeDaily').classList.add('active');
+    getElement('editTypeWeekly').classList.remove('active');
+  });
+  getElement('editTypeWeekly').addEventListener('click', () => {
+    getElement('editTypeWeekly').classList.add('active');
+    getElement('editTypeDaily').classList.remove('active');
+  });
+
+  getElement('groupsBtn').addEventListener('click', () => {
+    renderGroupModal();
+    getElement('groupsModal').classList.add('open');
+  });
+  getElement('groupsDone').addEventListener('click', () => {
+    getElement('groupsModal').classList.remove('open');
+  });
+  getElement('groupsModal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) getElement('groupsModal').classList.remove('open');
+  });
+  getElement('addGroupBtn').addEventListener('click', () => {
+    const input = getElement('groupInput');
+    addGroup(input.value);
+    input.value = '';
+    input.focus();
+  });
+  getElement('groupInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') getElement('addGroupBtn').click();
   });
 
   render();

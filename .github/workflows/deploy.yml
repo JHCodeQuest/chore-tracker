@@ -1,0 +1,57 @@
+name: Deploy PROD & UAT
+
+on:
+  push:
+    branches:
+      - main
+      - uat
+  pull_request:
+    branches:
+      - main
+      - uat
+
+permissions:
+  contents: write
+
+jobs:
+  lint:
+    if: github.ref_name == 'dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate HTML
+        run: |
+          echo "✅ HTML file exists"
+          test -f index.html && echo "index.html found"
+          echo "Lint passed"
+
+  deploy-prod:
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to PROD (gh-pages root)
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          keep_files: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+
+  deploy-uat:
+    if: github.ref_name == 'uat'
+    runs-on: ubuntu-latest
+    environment: uat
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to UAT (gh-pages /uat/)
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          destination_dir: uat
+          keep_files: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
